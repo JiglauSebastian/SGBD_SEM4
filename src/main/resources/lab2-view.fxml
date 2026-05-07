@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox spacing="10" xmlns:fx="http://javafx.com/fxml" fx:controller="controller.Lab2Controller"
+      style="-fx-padding: 15; -fx-min-width: 750;">
+
+    <Label text="LAB 2 - Tranzactii si Niveluri de Izolare"
+           style="-fx-font-size: 16; -fx-font-weight: bold;"/>
+
+    <Separator/>
+
+    <Label text="Demonstratii Concurenta:" style="-fx-font-weight: bold;"/>
+    <HBox spacing="8">
+        <Button text="Dirty Read"           onAction="#runDirtyRead"          prefWidth="150"/>
+        <Button text="Non-Repeatable Read"  onAction="#runNonRepeatableRead"  prefWidth="150"/>
+        <Button text="Phantom Read"         onAction="#runPhantomRead"        prefWidth="150"/>
+        <Button text="Lost Update"          onAction="#runLostUpdate"         prefWidth="150"/>
+    </HBox>
+
+    <Label text="Deadlock:" style="-fx-font-weight: bold;"/>
+    <HBox spacing="8">
+        <Button text="Demo Deadlock" onAction="#runDeadlock" prefWidth="200"/>
+    </HBox>
+
+    <Label text="Performanta Batch:" style="-fx-font-weight: bold;"/>
+    <HBox spacing="8">
+        <Button text="Comparatie Batch (5000 insert x3 rulari)" onAction="#runBatch" prefWidth="300"/>
+    </HBox>
+
+    <Label text="Toate demonstratiile:" style="-fx-font-weight: bold;"/>
+    <HBox spacing="8">
+        <Button text="Ruleaza TOT" onAction="#runAll" prefWidth="150"
+                style="-fx-background-color: #4a90d9; -fx-text-fill: white;"/>
+        <Button text="Curata output" onAction="#clearOutput" prefWidth="120"/>
+    </HBox>
+
+    <Separator/>
+
+    <Label text="Output:" style="-fx-font-weight: bold;"/>
+    <TextArea fx:id="outputArea" prefHeight="350" editable="false" wrapText="true"
+              style="-fx-font-family: monospace; -fx-font-size: 12;"/>
+
+    <Label fx:id="statusLabel" text="" style="-fx-text-fill: gray; -fx-font-style: italic;"/>
+</VBox>

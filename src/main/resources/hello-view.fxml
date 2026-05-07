@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox spacing="10" xmlns:fx="http://javafx.com/fxml" fx:controller="controller.HelloController" style="-fx-padding: 10;">
+    <HBox spacing="10">
+        <Button text="Refresh Date" onAction="#refreshDate"/>
+        <Button text="Lab 2 - Tranzactii" onAction="#openLab2"
+                style="-fx-background-color: #4a90d9; -fx-text-fill: white;"/>
+    </HBox>
+
+    <Label text="Cofetari"/>
+    <TableView fx:id="tabelParinte" prefHeight="200"/>
+
+    <Label text="Torturi"/>
+    <HBox spacing="10">
+        <TextField fx:id="txtCautare" promptText="Cauta tort dupa denumire..."/>
+        <Button text="Filtreaza" onAction="#filtreazaTorturi"/>
+    </HBox>
+    <TableView fx:id="tabelCopil" prefHeight="200"/>
+
+    <HBox spacing="10">
+        <Label text="Denumire:"/>
+        <TextField fx:id="txtDenumire"/>
+        <Label text="Pret:"/>
+        <TextField fx:id="txtPret"/>
+        <Label text="Client ID:"/>
+        <TextField fx:id="txtClientId"/>
+    </HBox>
+    <HBox spacing="10">
+        <Button text="Adauga" onAction="#adaugaTort"/>
+        <Button text="Editeaza" onAction="#editeazaTort"/>
+        <Button text="Sterge" onAction="#stergeTort"/>
+    </HBox>
+</VBox>
