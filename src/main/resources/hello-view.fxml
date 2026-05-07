@@ -5,8 +5,8 @@
 <VBox spacing="10" xmlns:fx="http://javafx.com/fxml" fx:controller="controller.HelloController" style="-fx-padding: 10;">
     <HBox spacing="10">
         <Button text="Refresh Date" onAction="#refreshDate"/>
-        <Button text="Lab 2 - Tranzactii" onAction="#openLab2"
-                style="-fx-background-color: #4a90d9; -fx-text-fill: white;"/>
+        <Button text="Lab 2 - Tranzactii" onAction="#openLab2" style="-fx-background-color: #4a90d9; -fx-text-fill: white;"/>
+        <Button text="Lab 3 - Demo Pooling (Consola)" onAction="#runLab3Demo" style="-fx-background-color: #28a745; -fx-text-fill: white;"/>
     </HBox>
 
     <Label text="Cofetari"/>

@@ -2,73 +2,72 @@ package repository;
 
 import domain.Cofetar;
 import domain.Tort;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
 
-import java.sql.*;
-import java.util.ArrayList;
 import java.util.List;
 
 public class DataAccessObject {
 
-    public List<Cofetar> getAllCofetari() throws SQLException {
-        List<Cofetar> list = new ArrayList<>();
-        String sql = "SELECT id, nume, specializare FROM cofetar";
-        try (Connection conn = DatabaseManager.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql);
-             ResultSet rs = pstmt.executeQuery()) {
-            while (rs.next()) {
-                list.add(new Cofetar(rs.getInt("id"), rs.getString("nume"), rs.getString("specializare")));
+    public List<Cofetar> getAllCofetari() {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            return session.createQuery("FROM Cofetar", Cofetar.class).list();
+        }
+    }
+
+    public List<Tort> getTorturiByCofetar(int cofetarId) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            return session.createQuery("FROM Tort t WHERE t.cofetar.id = :id", Tort.class)
+                    .setParameter("id", cofetarId)
+                    .list();
+        }
+    }
+
+    public void insertTort(String denumire, double pret, int cofetarId, int clientId) {
+        Transaction transaction = null;
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
+            Cofetar cofetar = session.get(Cofetar.class, cofetarId);
+            if (cofetar != null) {
+                Tort tort = new Tort(0, denumire, pret, cofetar, clientId);
+                session.persist(tort);
             }
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction != null) transaction.rollback();
+            throw e;
         }
-        return list;
     }
 
-    public List<Tort> getTorturiByCofetar(int cofetarId) throws SQLException {
-        List<Tort> list = new ArrayList<>();
-        String sql = "SELECT id, denumire, pret, cofetar_id, client_id FROM tort WHERE cofetar_id = ?";
-        try (Connection conn = DatabaseManager.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setInt(1, cofetarId);
-            try (ResultSet rs = pstmt.executeQuery()) {
-                while (rs.next()) {
-                    list.add(new Tort(
-                            rs.getInt("id"), rs.getString("denumire"),
-                            rs.getDouble("pret"), rs.getInt("cofetar_id"), rs.getInt("client_id")
-                    ));
-                }
+    public void updateTort(int id, String denumire, double pret) {
+        Transaction transaction = null;
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
+            Tort tort = session.get(Tort.class, id);
+            if (tort != null) {
+                tort.setDenumire(denumire);
+                tort.setPret(pret);
+                session.merge(tort);
             }
-        }
-        return list;
-    }
-
-    public void insertTort(String denumire, double pret, int cofetarId, int clientId) throws SQLException {
-        String sql = "INSERT INTO tort (denumire, pret, cofetar_id, client_id) VALUES (?, ?, ?, ?)";
-        try (Connection conn = DatabaseManager.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setString(1, denumire);
-            pstmt.setDouble(2, pret);
-            pstmt.setInt(3, cofetarId);
-            pstmt.setInt(4, clientId);
-            pstmt.executeUpdate();
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction != null) transaction.rollback();
+            throw e;
         }
     }
 
-    public void updateTort(int id, String denumire, double pret) throws SQLException {
-        String sql = "UPDATE tort SET denumire = ?, pret = ? WHERE id = ?";
-        try (Connection conn = DatabaseManager.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setString(1, denumire);
-            pstmt.setDouble(2, pret);
-            pstmt.setInt(3, id);
-            pstmt.executeUpdate();
-        }
-    }
-
-    public void deleteTort(int id) throws SQLException {
-        String sql = "DELETE FROM tort WHERE id = ?";
-        try (Connection conn = DatabaseManager.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setInt(1, id);
-            pstmt.executeUpdate();
+    public void deleteTort(int id) {
+        Transaction transaction = null;
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
+            Tort tort = session.get(Tort.class, id);
+            if (tort != null) {
+                session.remove(tort);
+            }
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction != null) transaction.rollback();
+            throw e;
         }
     }
 }

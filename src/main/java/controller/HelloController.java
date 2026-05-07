@@ -13,8 +13,8 @@ import javafx.scene.control.*;
 import javafx.stage.Stage;
 import repository.DataAccessObject;
 import service.CofetarieService;
+import service.ConnectionPoolDemoService;
 
-import java.sql.SQLException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -68,7 +68,7 @@ public class HelloController {
         try {
             List<Cofetar> cofetari = service.getAllCofetari();
             tabelParinte.setItems(FXCollections.observableArrayList(cofetari));
-        } catch (SQLException e) {
+        } catch (Exception e) {
             showAlert("Eroare la incarcare cofetari: " + e.getMessage());
         }
     }
@@ -77,7 +77,7 @@ public class HelloController {
         try {
             torturiCurente = service.getTorturiByCofetar(cofetarId);
             tabelCopil.setItems(FXCollections.observableArrayList(torturiCurente));
-        } catch (SQLException e) {
+        } catch (Exception e) {
             showAlert("Eroare la incarcare torturi: " + e.getMessage());
         }
     }
@@ -149,6 +149,18 @@ public class HelloController {
         } catch (Exception e) {
             showAlert("Nu s-a putut deschide fereastra Lab 2: " + e.getMessage());
         }
+    }
+
+    @FXML
+    public void runLab3Demo() {
+        ConnectionPoolDemoService poolDemo = new ConnectionPoolDemoService();
+        Thread t = new Thread(() -> {
+            poolDemo.runPerformanceMeasurement();
+            poolDemo.runConnectionLeakDemo();
+        });
+        t.start();
+        Alert alert = new Alert(Alert.AlertType.INFORMATION, "Demo-ul pentru Connection Pooling ruleaza in consola!", ButtonType.OK);
+        alert.showAndWait();
     }
 
     private void clearFields() {
